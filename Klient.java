@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -90,7 +91,7 @@ public class Klient {
 		this.adressEmail = adressEmail;
 	}
 	
-	public void bufferedReader() throws IOException {
+	public void bufferedReader()  {
 		
 				
 		try {
@@ -103,11 +104,19 @@ public class Klient {
 		} catch (FileNotFoundException e) {
 			System.out.println("File is not found");
 			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Problem with formating data");
+			e.printStackTrace();
 		}finally {
 			
 			if (bf == null) {
 				System.out.println("File not loaded");
-				bf.close();
+				try {
+					bf.close();
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -155,7 +164,7 @@ public class Klient {
 				";" + adressEmail;
 	}
 	
-	public static int rowsCount() throws IOException {
+	public static int rowsCount()  {
 		BufferedReader bf = null;
 		int x = 0;
 				try {
@@ -165,14 +174,22 @@ public class Klient {
 		} catch (FileNotFoundException e) {
 			
 			e.printStackTrace();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
 		}finally {
-			bf.close();
+			try {
+				bf.close();
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}
 		}
 				System.out.println(x);
 		return x+1;
 	}
 	
-	public String takeClientNumber() throws IOException   {
+	public String takeClientNumber()    {
 	
 		String line = null;
 		
@@ -183,10 +200,13 @@ public class Klient {
 			
 		    line = lines.skip(number-1).findFirst().get();
 		    
-		} catch (NoSuchElementException e)
+		} catch (NoSuchElementException   e)
 		{
 			System.out.println("W bazie danych brakuje klienta o podanym numerze");
 			
+			}catch(IOException ex) {
+				System.out.println("The file did not load ");
+				ex.printStackTrace();
 			}
 		return line;
 		}
